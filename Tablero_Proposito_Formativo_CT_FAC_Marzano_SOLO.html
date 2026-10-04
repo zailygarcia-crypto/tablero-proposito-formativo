@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Propósito formativo por campo y línea</title>
+</head>
+<body>
+    <div id="pfmApp">
+    <style>
+    #pfmApp{
+      --azul:#0067B1;--azul2:#004B85;--amarillo:#FFD000;--amarillo2:#FFF3B5;
+      --texto:#263746;--grafito:#575756;--borde:#C8D9E8;--claro:#F5FAFD;--verde:#287A4B;
+      max-width:1080px;margin:0 auto;font-family:"Cera Pro","Trebuchet MS",Arial,sans-serif;
+      color:var(--texto);line-height:1.5
+    }
+    #pfmApp *{box-sizing:border-box}
+    #pfmApp .pfm-card{border:1px solid var(--borde);border-radius:12px;background:#fff;padding:20px}
+    #pfmApp .pfm-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;
+      background:var(--amarillo2);color:#173F67;font-size:12px;font-weight:700;margin-bottom:12px}
+    #pfmApp .pfm-intro{margin:0 0 18px;color:var(--grafito);font-size:14px}
+    #pfmApp .pfm-intro strong{color:#173F67}
+    #pfmApp .pfm-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    #pfmApp .pfm-field{margin-bottom:13px;min-width:0}
+    #pfmApp .pfm-full{grid-column:1/-1}
+    #pfmApp label{display:block;color:#173F67;font-size:13px;font-weight:700;margin:0 0 5px}
+    #pfmApp .pfm-help{display:block;color:#6C7C89;font-size:11.5px;margin:-1px 0 7px}
+    #pfmApp select,#pfmApp input,#pfmApp textarea{
+      width:100%;border:1px solid var(--borde);border-radius:8px;background:#fff;color:var(--texto);
+      padding:9px 11px;font:13px/1.45 inherit
+    }
+    #pfmApp select{min-height:41px;cursor:pointer}
+    #pfmApp input{min-height:41px}
+    #pfmApp textarea{min-height:76px;resize:vertical}
+    #pfmApp select:focus,#pfmApp input:focus,#pfmApp textarea:focus{
+      outline:none;border-color:var(--azul);box-shadow:0 0 0 3px rgba(0,103,177,.10)
+    }
+    #pfmApp .pfm-builder{border-top:1px solid #E3EBF1;margin-top:4px;padding-top:15px}
+    #pfmApp .pfm-result{min-height:82px;padding:14px 15px;border:1.5px dashed var(--azul);
+      border-radius:9px;background:#F8FCFF;color:#173F67;font-size:14px;line-height:1.6}
+    #pfmApp .pfm-solo{padding:12px 14px;border:1.5px dashed var(--azul);border-radius:9px;
+      background:#fff;color:#173F67;font-size:13px}
+    #pfmApp .pfm-prog{margin-top:9px;padding:11px 14px;background:#EAF4FA;border-left:4px solid var(--azul);
+      border-radius:0 8px 8px 0;color:#34566E;font-size:12.5px}
+    #pfmApp .pfm-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:17px}
+    #pfmApp .pfm-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:39px;
+      padding:8px 15px;border-radius:22px;font:700 12.5px/1 inherit;cursor:pointer}
+    #pfmApp .pfm-primary{background:var(--azul);border:1px solid var(--azul);color:#fff}
+    #pfmApp .pfm-secondary{background:#fff;border:1px solid var(--azul);color:var(--azul)}
+    #pfmApp .pfm-clear{background:#fff;border:1px solid #8D8D8D;color:var(--grafito)}
+    #pfmApp .pfm-status{display:none;margin-top:10px;padding:9px 12px;background:#EAF6EF;
+      border-left:4px solid var(--verde);border-radius:6px;color:#245C3B;font-size:12px}
+    #pfmApp .pfm-status.on{display:block}
+    #pfmApp .pfm-note{margin-top:18px;padding:12px 14px;background:var(--amarillo2);
+      border-left:4px solid #B98200;border-radius:0 8px 8px 0;color:#554A2A;font-size:12px}
+    #pfmApp .pfm-ref{margin-top:20px}
+    #pfmApp .pfm-ref h3{margin:0 0 8px;color:#173F67;font-size:14px}
+    #pfmApp .pfm-table-wrap{overflow-x:auto;border:1px solid var(--borde);border-radius:8px}
+    #pfmApp table{width:100%;min-width:620px;border-collapse:collapse;font-size:11.5px}
+    #pfmApp th{background:#285A83;color:#fff;text-align:left;padding:9px 10px}
+    #pfmApp td{padding:9px 10px;border-bottom:1px solid #D7E3EC;vertical-align:top}
+    #pfmApp tr:nth-child(even) td{background:#F3F7FA}
+    @media(max-width:720px){
+      #pfmApp .pfm-grid{grid-template-columns:1fr}
+      #pfmApp .pfm-full{grid-column:auto}
+      #pfmApp select,#pfmApp input,#pfmApp textarea{font-size:16px}
+      #pfmApp .pfm-actions{flex-direction:column}
+      #pfmApp .pfm-btn{width:100%}
+    }
+    @media print{
+      body *{visibility:hidden}
+      #pfmApp,#pfmApp *{visibility:visible}
+      #pfmApp{position:absolute;left:0;top:0;width:100%;max-width:none}
+      #pfmApp .pfm-actions,#pfmApp .pfm-status{display:none!important}
+    }
+    </style>
+
+    <div class="pfm-card">
+      <div class="pfm-tag">📝 Plantilla</div>
+      <p class="pfm-intro">
+        Construye el propósito formativo a partir de cinco decisiones articuladas:
+        <strong>modalidad y línea</strong>, <strong>ciclo</strong>, <strong>nivel de Marzano</strong>,
+        <strong>verbo</strong> y <strong>objeto de aprendizaje</strong>. El tablero completa el propósito
+        y deriva automáticamente el <strong>Nivel SOLO esperado</strong>.
+      </p>
+
+      <div class="pfm-grid">
+        <div class="pfm-field">
+          <label for="pfmModalidad">Modalidad</label>
+          <select id="pfmModalidad">
+          <option value="Ciencia y Tecnología" selected>Ciencia y Tecnología</option>
+          <option value="Formación Artística">Formación Artística</option>
+        </select>
+        </div>
+        <div class="pfm-field">
+          <label for="pfmLinea">Línea</label>
+          <select id="pfmLinea">
+          <option value="CILAB" selected>CILAB</option>
+          <option value="NEOTECH">NEOTECH</option>
+        </select>
+        </div>
+        <div class="pfm-field">
+          <label for="pfmCiclo">Ciclo</label>
+          <select id="pfmCiclo">
+          <option value="Ciclo 1" selected>Ciclo 1</option>
+          <option value="Ciclo 2">Ciclo 2</option>
+          <option value="Ciclo 3">Ciclo 3</option>
+          <option value="Ciclo 4">Ciclo 4</option>
+          <option value="Ciclo 5">Ciclo 5</option>
+        </select>
+        </div>
+        <div class="pfm-field">
+          <label for="pfmMarzano">Proceso de pensamiento · Marzano</label>
+          <select id="pfmMarzano">
+          <option value="Recuperación">Recuperación</option>
+          <option value="Comprensión" selected>Comprensión</option>
+          <option value="Análisis">Análisis</option>
+          <option value="Utilización del conocimiento">Utilización del conocimiento</option>
+          <option value="Metacognición">Metacognición</option>
+          <option value="Autosistema">Autosistema</option>
+        </select>
+          <span class="pfm-help">Orienta el proceso cognitivo, metacognitivo o del yo que se moviliza; no funciona como una gradación equivalente a SOLO.</span>
+        </div>
+        <div class="pfm-field">
+          <label>Sistema de pensamiento movilizado</label>
+          <div id="pfmSistema" class="pfm-solo" aria-live="polite"></div>
+        </div>
+        <div class="pfm-field">
+          <label for="pfmVerbo">Verbo</label>
+          <select id="pfmVerbo">
+          <option value="">Selecciona un proceso de Marzano</option>
+        </select>
+          <span class="pfm-help">Los verbos cambian automáticamente según modalidad, línea, ciclo y proceso de Marzano.</span>
+        </div>
+      </div>
+
+      <div class="pfm-builder">
+        <div class="pfm-field">
+          <label for="pfmSobre">¿Sobre qué?</label>
+          <span class="pfm-help">Objeto de aprendizaje sugerido por la matriz. Puedes contextualizarlo sin perder el referente.</span>
+          <textarea id="pfmSobre"></textarea>
+        </div>
+        <div class="pfm-field">
+          <label for="pfmComo">¿Cómo o con qué?</label>
+          <span class="pfm-help">Mediación sugerida. Es editable para ajustarla a la experiencia concreta.</span>
+          <textarea id="pfmComo"></textarea>
+        </div>
+        <div class="pfm-field">
+          <label for="pfmPara">¿Para qué?</label>
+          <span class="pfm-help">Sentido formativo del aprendizaje. También puedes ajustarlo al contexto.</span>
+          <textarea id="pfmPara"></textarea>
+        </div>
+      </div>
+
+      <div class="pfm-field">
+        <label>Tu propósito formativo</label>
+        <div id="pfmResultado" class="pfm-result" aria-live="polite"></div>
+      </div>
+
+      <div class="pfm-field">
+        <label>Nivel SOLO esperado</label>
+        <div id="pfmSolo" class="pfm-solo" aria-live="polite"></div>
+        <div id="pfmProg" class="pfm-prog"></div>
+      </div>
+
+      <div class="pfm-actions">
+        <button type="button" id="pfmGuardar" class="pfm-btn pfm-primary">💾 Guardar borrador</button>
+        <button type="button" id="pfmRecuperar" class="pfm-btn pfm-secondary">↩ Recuperar</button>
+        <button type="button" id="pfmImprimir" class="pfm-btn pfm-secondary">🖨 Imprimir</button>
+        <button type="button" id="pfmLimpiar" class="pfm-btn pfm-clear">↺ Limpiar</button>
+      </div>
+
+      <div id="pfmEstado" class="pfm-status" role="status" aria-live="polite"></div>
+
+      <div class="pfm-note">
+        <strong>Del referente a la decisión pedagógica:</strong> las opciones se derivan de la matriz CT–FAC.
+        Los campos de mediación y sentido formativo permanecen editables para que el propósito responda al grupo,
+        al contexto y a la experiencia que se va a desarrollar.
+      </div>
+
+      <div class="pfm-ref">
+        <h3>Referencia rápida · Taxonomía SOLO</h3>
+        <div class="pfm-table-wrap">
+          <table>
+            <thead><tr><th>Nivel SOLO</th><th>Complejidad estructural de la evidencia</th><th>Qué se espera observar</th></tr></thead>
+            <tbody>
+              <tr><td>Uniestructural</td><td>La producción se centra en un aspecto relevante de la tarea.</td><td>Reconoce o utiliza un elemento pertinente con apoyo.</td></tr>
+              <tr><td>Multiestructural</td><td>Incorpora varios aspectos relevantes, todavía tratados de manera independiente.</td><td>Identifica, describe o utiliza varios componentes sin integrarlos plenamente.</td></tr>
+              <tr><td>Relacional</td><td>Integra los distintos aspectos en una estructura coherente.</td><td>Relaciona componentes, explica conexiones y construye una respuesta o producción articulada.</td></tr>
+              <tr><td>Abstracto ampliado</td><td>Generaliza lo aprendido y lo transfiere más allá de la situación inicial.</td><td>Formula nuevas posibilidades, transfiere, proyecta o reconfigura el aprendizaje en situaciones nuevas.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="pfm-ref">
+        <h3>Referencia rápida · Nueva Taxonomía de Marzano</h3>
+        <div class="pfm-table-wrap">
+          <table>
+            <thead><tr><th>Sistema de pensamiento</th><th>Función en el aprendizaje</th><th>Procesos que orienta en el tablero</th></tr></thead>
+            <tbody>
+              <tr><td>Sistema cognitivo</td><td>Procesa la información necesaria para comprender y actuar sobre la tarea.</td><td>Recuperación, comprensión, análisis y utilización del conocimiento.</td></tr>
+              <tr><td>Sistema metacognitivo</td><td>Orienta la planeación, el monitoreo y la regulación del propio proceso.</td><td>Definición de metas, seguimiento de estrategias, revisión de decisiones y reflexión sobre el proceso.</td></tr>
+              <tr><td>Sistema del yo</td><td>Moviliza la disposición, la valoración, la motivación y la agencia frente al reto.</td><td>Valoración de la importancia de la tarea, disposición para asumirla, persistencia y compromiso con las decisiones.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pfm-note">
+          <strong>¿Cómo se articulan?</strong> SOLO gradúa la complejidad estructural de la evidencia; Marzano permite reconocer qué sistema de pensamiento sostiene esa producción. No se usan como escalas equivalentes: se combinan para atender simultáneamente la complejidad de la producción y la profundidad del pensamiento que la sostiene.
+        </div>
+      </div>
+    </div>
+
+    <script>
+    (function(){
+    "use strict";
+
+    var DATA = [{"modalidad": "Ciencia y Tecnología", "linea": "CILAB", "ciclo": "Ciclo 1", "sobre": "secuencias de instrucciones, relaciones espaciales y funcionamiento básico de soluciones tecnológicas", "como": "retos de programación desconectada, manipulación de materiales y construcción guiada de una secuencia funcional", "para": "comprender cómo instrucciones ordenadas permiten resolver situaciones sencillas del entorno cercano", "niveles": ["Recuperación", "Comprensión", "Utilización del conocimiento"], "verbos_raw": "Recuperación: Reconoce, Nombra | Comprensión: Explora | Utilización del conocimiento: Manipula (Experimentación)", "progresion": "NIVEL INICIAL – Exploración y Familiarización", "solo": "Uniestructural: el(la) estudiante maneja un aspecto relevante con apoyo."}, {"modalidad": "Ciencia y Tecnología", "linea": "CILAB", "ciclo": "Ciclo 2", "sobre": "circuitos básicos, sensores y relaciones entre estímulos del entorno y respuestas tecnológicas", "como": "experimentación guiada con circuitos, sensores y prototipos vinculados con situaciones del entorno escolar", "para": "usar principios tecnológicos básicos para responder a necesidades observables de su contexto", "niveles": ["Comprensión", "Utilización del conocimiento"], "verbos_raw": "Comprensión: Describe, Relaciona | Utilización del conocimiento: Ensambla (Resolución de problemas), Secuencia (Resolución de problemas)", "progresion": "NIVEL PRE-BÁSICO – Iniciación y Práctica Guiada", "solo": "Uniestructural a multiestructural: reconoce y usa varios aspectos, aún sin relacionarlos."}, {"modalidad": "Ciencia y Tecnología", "linea": "CILAB", "ciclo": "Ciclo 3", "sobre": "variables del entorno, medición con sensores, datos y control de sistemas tecnológicos", "como": "indagación guiada, registro de datos y construcción de prototipos que integren sensores y respuestas programadas", "para": "resolver problemas del entorno escolar mediante evidencia, experimentación y soluciones tecnológicas funcionales", "niveles": ["Recuperación", "Análisis", "Utilización del conocimiento"], "verbos_raw": "Recuperación: Identifica | Análisis: Formula (Especificar) | Utilización del conocimiento: Construye (Resolución de problemas), Aplica (Resolución de problemas), Registra (Investigación)", "progresion": "NIVEL BÁSICO – Comprensión y Aplicación", "solo": "Multiestructural a relacional: comienza a relacionar los aspectos en un todo."}, {"modalidad": "Ciencia y Tecnología", "linea": "CILAB", "ciclo": "Ciclo 4", "sobre": "sistemas de monitoreo, integración de datos y soluciones tecnológicas aplicadas a retos institucionales", "como": "proyectos de diseño, construcción, prueba y optimización de sistemas tecnológicos situados", "para": "generar soluciones innovadoras sustentadas en datos que contribuyan al mejoramiento del entorno", "niveles": ["Utilización del conocimiento"], "verbos_raw": "Utilización del conocimiento: Integra (Resolución de problemas), Diseña (Resolución de problemas), Evalúa (Toma de decisiones), Argumenta (Toma de decisiones), Optimiza (Resolución de problemas)", "progresion": "NIVEL INTERMEDIO – Análisis y Evaluación", "solo": "Relacional: integra los aspectos y explica cómo se conectan."}, {"modalidad": "Ciencia y Tecnología", "linea": "CILAB", "ciclo": "Ciclo 5", "sobre": "soluciones científico-tecnológicas viables para problemáticas reales del territorio", "como": "proyectos autónomos de investigación, prototipado, validación con actores del territorio y sistematización de resultados", "para": "proyectar soluciones con impacto, viabilidad y capacidad de transferencia a contextos reales", "niveles": ["Metacognición", "Autosistema"], "verbos_raw": "Metacognición: Proyecta, Sistematiza | Autosistema: Lidera, Transforma, Genera", "progresion": "NIVEL AVANZADO – Creación y Metacognición", "solo": "Relacional a abstracto ampliado: generaliza y transfiere a situaciones nuevas."}, {"modalidad": "Ciencia y Tecnología", "linea": "NEOTECH", "ciclo": "Ciclo 1", "sobre": "mecanismos simples, materiales y relaciones de causa y efecto presentes en objetos cotidianos", "como": "exploración de objetos, construcción guiada y prueba de mecanismos simples no eléctricos", "para": "reconocer cómo las soluciones técnicas pueden responder a necesidades cotidianas", "niveles": ["Recuperación", "Comprensión", "Utilización del conocimiento"], "verbos_raw": "Recuperación: Reconoce, Nombra | Comprensión: Explora | Utilización del conocimiento: Manipula (Experimentación)", "progresion": "NIVEL INICIAL – Exploración y Familiarización", "solo": "Uniestructural: el(la) estudiante maneja un aspecto relevante con apoyo."}, {"modalidad": "Ciencia y Tecnología", "linea": "NEOTECH", "ciclo": "Ciclo 2", "sobre": "secuencias, mecanismos y estrategias para optimizar tareas y recorridos cotidianos", "como": "retos de diseño y construcción de prototipos físicos mediante secuencias, ensayo y ajuste", "para": "mejorar tareas del entorno mediante soluciones organizadas, funcionales y verificables", "niveles": ["Comprensión", "Utilización del conocimiento"], "verbos_raw": "Comprensión: Describe, Relaciona | Utilización del conocimiento: Ensambla (Resolución de problemas), Secuencia (Resolución de problemas)", "progresion": "NIVEL PRE-BÁSICO – Iniciación y Práctica Guiada", "solo": "Uniestructural a multiestructural: reconoce y usa varios aspectos, aún sin relacionarlos."}, {"modalidad": "Ciencia y Tecnología", "linea": "NEOTECH", "ciclo": "Ciclo 3", "sobre": "pensamiento computacional, sensores, programación y comportamiento de prototipos automatizados", "como": "resolución de retos mediante programación, construcción de prototipos, pruebas y registro de resultados", "para": "diseñar soluciones automatizadas para problemas concretos del entorno escolar", "niveles": ["Recuperación", "Comprensión", "Análisis", "Utilización del conocimiento"], "verbos_raw": "Recuperación: Identifica | Comprensión: Documenta | Análisis: Analiza (Generalizar) | Utilización del conocimiento: Diseña (Resolución de problemas), Construye (Resolución de problemas)", "progresion": "NIVEL BÁSICO – Comprensión y Aplicación", "solo": "Multiestructural a relacional: comienza a relacionar los aspectos en un todo."}, {"modalidad": "Ciencia y Tecnología", "linea": "NEOTECH", "ciclo": "Ciclo 4", "sobre": "automatización, tecnologías emergentes y sistemas tecnológicos orientados al cuidado del territorio", "como": "proyectos de ingeniería escolar que integren sensores, programación, automatización, prueba e iteración", "para": "resolver retos del contexto mediante prototipos tecnificados, eficientes y sostenibles", "niveles": ["Utilización del conocimiento", "Metacognición"], "verbos_raw": "Utilización del conocimiento: Integra (Resolución de problemas), Diseña (Resolución de problemas), Tecnifica (Resolución de problemas), Evalúa (Toma de decisiones) | Metacognición: Sistematiza", "progresion": "NIVEL INTERMEDIO – Análisis y Evaluación", "solo": "Relacional: integra los aspectos y explica cómo se conectan."}, {"modalidad": "Ciencia y Tecnología", "linea": "NEOTECH", "ciclo": "Ciclo 5", "sobre": "procesos de ingeniería y soluciones tecnológicas autónomas para necesidades del territorio", "como": "proyectos autónomos de diseño tecnológico, prototipado, validación técnica con usuarios y comunicación de resultados", "para": "desarrollar soluciones viables y transferibles con incidencia en escenarios comunitarios y productivos", "niveles": ["Metacognición", "Autosistema"], "verbos_raw": "Metacognición: Proyecta, Sistematiza | Autosistema: Lidera, Genera, Transforma", "progresion": "NIVEL AVANZADO – Creación y Metacognición", "solo": "Relacional a abstracto ampliado: generaliza y transfiere a situaciones nuevas."}, {"modalidad": "Formación Artística", "linea": "Danza", "ciclo": "Ciclo 1", "sobre": "el cuerpo, el movimiento, el espacio y sus posibilidades expresivas", "como": "juegos de movimiento, exploraciones corporales y experiencias expresivas colectivas", "para": "reconocer el cuerpo como territorio de exploración, expresión y relación con otros", "niveles": ["Recuperación", "Comprensión"], "verbos_raw": "Recuperación: Reconoce | Comprensión: Explora, Establece, Descubre", "progresion": "Exploración corporal y expresión sensible.", "solo": "Uniestructural: el(la) estudiante maneja un aspecto relevante con apoyo."}, {"modalidad": "Formación Artística", "linea": "Danza", "ciclo": "Ciclo 2", "sobre": "secuencias de movimiento, ritmo, espacio y narración corporal", "como": "narrativas corporales, composiciones colectivas y exploraciones rítmicas vinculadas con experiencias cercanas", "para": "comunicar ideas, emociones y experiencias mediante el movimiento", "niveles": ["Recuperación", "Comprensión", "Utilización del conocimiento"], "verbos_raw": "Recuperación: Reconoce | Comprensión: Explora, Establece | Utilización del conocimiento: Organiza (Resolución de problemas)", "progresion": "Exploración, experimentación y creación corporal compartida.", "solo": "Uniestructural a multiestructural: reconoce y usa varios aspectos, aún sin relacionarlos."}, {"modalidad": "Formación Artística", "linea": "Danza", "ciclo": "Ciclo 3", "sobre": "cuerpo, identidad, memoria y referentes culturales presentes en la creación dancística", "como": "procesos de investigación-creación corporal, interpretación y composición a partir de relatos, memorias y referentes culturales", "para": "construir significados e identidad mediante decisiones expresivas cada vez más autónomas", "niveles": ["Análisis", "Utilización del conocimiento"], "verbos_raw": "Análisis: Analiza (Generalizar), Interpreta (Especificar) | Utilización del conocimiento: Diseña (Resolución de problemas), Integra (Resolución de problemas)", "progresion": "Investigación-creación corporal y construcción de identidad.", "solo": "Multiestructural a relacional: comienza a relacionar los aspectos en un todo."}, {"modalidad": "Formación Artística", "linea": "Danza", "ciclo": "Ciclo 4", "sobre": "cuerpo, territorio, memoria colectiva y problemáticas socioculturales", "como": "intervenciones corporales situadas, creación crítica y composición dancística vinculada con el territorio", "para": "problematizar el contexto y asumir posicionamientos culturales mediante la creación corporal", "niveles": ["Análisis", "Utilización del conocimiento"], "verbos_raw": "Análisis: Analiza (Generalizar), Formula (Especificar) | Utilización del conocimiento: Diseña (Resolución de problemas), Construye (Resolución de problemas)", "progresion": "Investigación-creación corporal situada, pensamiento crítico e incidencia territorial.", "solo": "Relacional: integra los aspectos y explica cómo se conectan."}, {"modalidad": "Formación Artística", "linea": "Danza", "ciclo": "Ciclo 5", "sobre": "investigación-creación corporal, identidad cultural, mediación y circulación artística", "como": "proyectos autónomos de investigación-creación, laboratorios de composición, mediación cultural y circulación de propuestas", "para": "producir conocimiento artístico y proyectar la práctica corporal hacia escenarios culturales y comunitarios", "niveles": ["Análisis", "Utilización del conocimiento", "Metacognición"], "verbos_raw": "Análisis: Formula (Especificar), Analiza (Generalizar) | Utilización del conocimiento: Diseña (Resolución de problemas) | Metacognición: Reflexiona", "progresion": "Investigación-creación corporal autónoma, conciencia metacognitiva e incidencia cultural.", "solo": "Relacional a abstracto ampliado: generaliza y transfiere a situaciones nuevas."}, {"modalidad": "Formación Artística", "linea": "Música", "ciclo": "Ciclo 1", "sobre": "sonidos del cuerpo, la voz, los objetos y el paisaje sonoro del entorno", "como": "exploraciones sonoras, juegos musicales y experiencias colectivas de escucha y creación", "para": "desarrollar escucha sensible y reconocer el sonido como posibilidad de expresión", "niveles": ["Recuperación", "Comprensión", "Utilización del conocimiento"], "verbos_raw": "Recuperación: Reconoce | Comprensión: Explora, Establece | Utilización del conocimiento: Organiza (Resolución de problemas)", "progresion": "Exploración sonora y expresión sensible.", "solo": "Uniestructural: el(la) estudiante maneja un aspecto relevante con apoyo."}, {"modalidad": "Formación Artística", "linea": "Música", "ciclo": "Ciclo 2", "sobre": "ritmo, silencio, organización sonora y posibilidades expresivas de la voz y los instrumentos", "como": "narrativas sonoras, creación musical colectiva y exploración de paisajes sonoros cercanos", "para": "comunicar ideas y experiencias mediante organizaciones sonoras intencionadas", "niveles": ["Recuperación", "Comprensión", "Utilización del conocimiento"], "verbos_raw": "Recuperación: Reconoce | Comprensión: Explora, Establece | Utilización del conocimiento: Organiza (Resolución de problemas)", "progresion": "Exploración, experimentación y creación musical compartida.", "solo": "Uniestructural a multiestructural: reconoce y usa varios aspectos, aún sin relacionarlos."}, {"modalidad": "Formación Artística", "linea": "Música", "ciclo": "Ciclo 3", "sobre": "música, identidad, memoria, patrimonio y diversidad cultural", "como": "procesos de investigación-creación musical, interpretación y composición basados en memorias y referentes culturales", "para": "construir significados e identidad mediante decisiones musicales progresivamente autónomas", "niveles": ["Análisis", "Utilización del conocimiento"], "verbos_raw": "Análisis: Analiza (Generalizar), Interpreta (Especificar) | Utilización del conocimiento: Diseña (Resolución de problemas), Integra (Resolución de problemas)", "progresion": "Investigación-creación musical y construcción de identidad.", "solo": "Multiestructural a relacional: comienza a relacionar los aspectos en un todo."}, {"modalidad": "Formación Artística", "linea": "Música", "ciclo": "Ciclo 4", "sobre": "paisajes sonoros, territorio, cultura y problemáticas sociales", "como": "intervenciones sonoras situadas, composición crítica y proyectos musicales vinculados con el contexto", "para": "analizar y transformar lecturas del territorio mediante la creación musical", "niveles": ["Análisis", "Utilización del conocimiento"], "verbos_raw": "Análisis: Analiza (Generalizar), Formula (Especificar) | Utilización del conocimiento: Diseña (Resolución de problemas), Construye (Resolución de problemas)", "progresion": "Investigación-creación musical situada, pensamiento crítico e incidencia territorial.", "solo": "Relacional: integra los aspectos y explica cómo se conectan."}, {"modalidad": "Formación Artística", "linea": "Música", "ciclo": "Ciclo 5", "sobre": "investigación-creación musical, patrimonio, producción, mediación y circulación cultural", "como": "proyectos autónomos de investigación-creación sonora, composición, producción y mediación cultural", "para": "producir conocimiento musical y proyectar propuestas con incidencia cultural y comunitaria", "niveles": ["Análisis", "Utilización del conocimiento", "Metacognición"], "verbos_raw": "Análisis: Formula (Especificar), Analiza (Generalizar) | Utilización del conocimiento: Diseña (Resolución de problemas) | Metacognición: Reflexiona", "progresion": "Investigación-creación musical autónoma, conciencia metacognitiva e incidencia cultural.", "solo": "Relacional a abstracto ampliado: generaliza y transfiere a situaciones nuevas."}, {"modalidad": "Formación Artística", "linea": "Teatro", "ciclo": "Ciclo 1", "sobre": "cuerpo, voz, imaginación, personajes y situaciones del juego dramático", "como": "juegos teatrales, exploración de roles y representaciones de situaciones cotidianas", "para": "reconocer la representación dramática como medio para expresar y compartir experiencias", "niveles": ["Recuperación", "Comprensión", "Utilización del conocimiento"], "verbos_raw": "Recuperación: Reconoce | Comprensión: Explora, Descubre | Utilización del conocimiento: Construye (Resolución de problemas)", "progresion": "Exploración dramática y representación simbólica.", "solo": "Uniestructural: el(la) estudiante maneja un aspecto relevante con apoyo."}, {"modalidad": "Formación Artística", "linea": "Teatro", "ciclo": "Ciclo 2", "sobre": "personajes, acciones, conflictos y narrativas dramáticas", "como": "improvisaciones guiadas, construcción colectiva de historias y representación de situaciones cercanas", "para": "comunicar ideas, emociones y experiencias mediante relatos y acciones escénicas", "niveles": ["Recuperación", "Comprensión", "Utilización del conocimiento"], "verbos_raw": "Recuperación: Reconoce | Comprensión: Explora, Establece | Utilización del conocimiento: Organiza (Resolución de problemas)", "progresion": "Exploración, experimentación y creación teatral compartida.", "solo": "Uniestructural a multiestructural: reconoce y usa varios aspectos, aún sin relacionarlos."}, {"modalidad": "Formación Artística", "linea": "Teatro", "ciclo": "Ciclo 3", "sobre": "identidad, memoria, diversidad cultural y construcción de significado escénico", "como": "procesos de investigación-creación teatral, interpretación, improvisación y creación colectiva", "para": "construir significados e identidad mediante decisiones interpretativas y escénicas", "niveles": ["Análisis", "Utilización del conocimiento"], "verbos_raw": "Análisis: Analiza (Generalizar), Interpreta (Especificar) | Utilización del conocimiento: Diseña (Resolución de problemas), Integra (Resolución de problemas)", "progresion": "Investigación-creación dramática y construcción de identidad.", "solo": "Multiestructural a relacional: comienza a relacionar los aspectos en un todo."}, {"modalidad": "Formación Artística", "linea": "Teatro", "ciclo": "Ciclo 4", "sobre": "conflictos, territorio, memoria y problemáticas socioculturales representadas escénicamente", "como": "creaciones escénicas situadas, dramaturgia colectiva e intervenciones teatrales vinculadas con el contexto", "para": "problematizar realidades y asumir posicionamientos culturales mediante la creación teatral", "niveles": ["Análisis", "Utilización del conocimiento"], "verbos_raw": "Análisis: Analiza (Generalizar), Formula (Especificar) | Utilización del conocimiento: Diseña (Resolución de problemas), Construye (Resolución de problemas)", "progresion": "Investigación-creación dramática situada, pensamiento crítico e incidencia territorial.", "solo": "Relacional: integra los aspectos y explica cómo se conectan."}, {"modalidad": "Formación Artística", "linea": "Teatro", "ciclo": "Ciclo 5", "sobre": "investigación-creación dramática, dramaturgia, mediación y circulación cultural", "como": "proyectos autónomos de investigación-creación escénica, laboratorios teatrales y procesos de mediación cultural", "para": "producir conocimiento desde la práctica teatral y proyectar propuestas hacia escenarios culturales y comunitarios", "niveles": ["Análisis", "Utilización del conocimiento", "Metacognición"], "verbos_raw": "Análisis: Formula (Especificar), Analiza (Generalizar) | Utilización del conocimiento: Diseña (Resolución de problemas) | Metacognición: Reflexiona", "progresion": "Investigación-creación dramática autónoma, conciencia metacognitiva e incidencia cultural.", "solo": "Relacional a abstracto ampliado: generaliza y transfiere a situaciones nuevas."}, {"modalidad": "Formación Artística", "linea": "Artes Plásticas y Visuales", "ciclo": "Ciclo 1", "sobre": "formas, colores, texturas, materiales e imágenes del entorno", "como": "exploraciones visuales y matéricas, observación sensible y experiencias colectivas de representación", "para": "reconocer las posibilidades expresivas de los materiales y representar experiencias del entorno", "niveles": ["Recuperación", "Comprensión"], "verbos_raw": "Recuperación: Reconoce | Comprensión: Explora, Establece, Representa", "progresion": "Exploración y Representación", "solo": "Uniestructural: el(la) estudiante maneja un aspecto relevante con apoyo."}, {"modalidad": "Formación Artística", "linea": "Artes Plásticas y Visuales", "ciclo": "Ciclo 2", "sobre": "imagen, símbolo, composición, materiales y narrativas visuales", "como": "talleres de experimentación, transformación de materiales y creación de narrativas visuales", "para": "comunicar ideas y experiencias mediante decisiones visuales cada vez más intencionadas", "niveles": ["Recuperación", "Comprensión", "Utilización del conocimiento"], "verbos_raw": "Recuperación: Reconoce | Comprensión: Establece | Utilización del conocimiento: Experimenta (Experimentación), Organiza (Resolución de problemas)", "progresion": "Exploración, experimentación y creación intencionada", "solo": "Uniestructural a multiestructural: reconoce y usa varios aspectos, aún sin relacionarlos."}, {"modalidad": "Formación Artística", "linea": "Artes Plásticas y Visuales", "ciclo": "Ciclo 3", "sobre": "imagen, identidad, memoria, patrimonio e imaginarios culturales", "como": "procesos de investigación-creación visual, lectura de imágenes y producción basada en referentes culturales", "para": "construir significados e identidad mediante la interpretación y la producción visual", "niveles": ["Análisis", "Utilización del conocimiento"], "verbos_raw": "Análisis: Analiza (Generalizar) | Utilización del conocimiento: Diseña (Resolución de problemas), Selecciona (Toma de decisiones), Construye (Resolución de problemas)", "progresion": "Interpretación, investigación-creación y construcción de identidad", "solo": "Multiestructural a relacional: comienza a relacionar los aspectos en un todo."}, {"modalidad": "Formación Artística", "linea": "Artes Plásticas y Visuales", "ciclo": "Ciclo 4", "sobre": "cultura visual, territorio, memoria y problemáticas sociales", "como": "intervenciones visuales situadas, análisis crítico de imágenes y proyectos de creación vinculados con el contexto", "para": "problematizar representaciones culturales y asumir posicionamientos mediante la creación visual", "niveles": ["Análisis", "Utilización del conocimiento"], "verbos_raw": "Análisis: Analiza (Generalizar), Formula (Especificar) | Utilización del conocimiento: Diseña (Resolución de problemas), Construye (Resolución de problemas)", "progresion": "Investigación-creación situada, pensamiento crítico e incidencia territorial", "solo": "Relacional: integra los aspectos y explica cómo se conectan."}, {"modalidad": "Formación Artística", "linea": "Artes Plásticas y Visuales", "ciclo": "Ciclo 5", "sobre": "investigación-creación visual, cultura, mediación, producción y circulación artística", "como": "proyectos autónomos de investigación-creación, producción visual, mediación y exposición de resultados", "para": "producir conocimiento visual y proyectar propuestas con incidencia cultural, social y territorial", "niveles": ["Análisis", "Utilización del conocimiento", "Metacognición"], "verbos_raw": "Análisis: Formula (Especificar), Analiza (Generalizar) | Utilización del conocimiento: Evalúa (Toma de decisiones) | Metacognición: Reflexiona", "progresion": "Investigación-creación autónoma, conciencia metacognitiva e incidencia cultural.", "solo": "Relacional a abstracto ampliado: generaliza y transfiere a situaciones nuevas."}];
+
+    var modalidad=document.getElementById("pfmModalidad"),
+        linea=document.getElementById("pfmLinea"),
+        ciclo=document.getElementById("pfmCiclo"),
+        marzano=document.getElementById("pfmMarzano"),
+        verbo=document.getElementById("pfmVerbo"),
+        sistema=document.getElementById("pfmSistema"),
+        sobre=document.getElementById("pfmSobre"),
+        como=document.getElementById("pfmComo"),
+        para=document.getElementById("pfmPara"),
+        resultado=document.getElementById("pfmResultado"),
+        solo=document.getElementById("pfmSolo"),
+        prog=document.getElementById("pfmProg"),
+        estado=document.getElementById("pfmEstado");
+
+    var CLAVE="colsubsidio_tablero_proposito_CT_FAC_Marzano_v2";
+
+    function uniq(a){return a.filter(function(v,i){return a.indexOf(v)===i})}
+    function fill(sel,items,keep){
+      sel.innerHTML="";
+      items.forEach(function(x){
+        var o=document.createElement("option");o.value=x;o.textContent=x;sel.appendChild(o);
+      });
+      if(keep && items.indexOf(keep)>=0) sel.value=keep;
+    }
+    function filasModalidad(){return DATA.filter(function(r){return r.modalidad===modalidad.value})}
+    function filasLinea(){return filasModalidad().filter(function(r){return r.linea===linea.value})}
+    function filaActual(){
+      return DATA.find(function(r){
+        return r.modalidad===modalidad.value && r.linea===linea.value && r.ciclo===ciclo.value;
+      });
+    }
+    function parseVerbos(row,nivel){
+      if(!row || !nivel) return [];
+      var raw=row.verbos_raw||"";
+      var niveles=row.niveles||[];
+      var inicio=raw.indexOf(nivel+":");
+      if(inicio<0) return [];
+      inicio += nivel.length+1;
+      var fin=raw.length;
+      niveles.forEach(function(n){
+        if(n===nivel) return;
+        var p=raw.indexOf("| "+n+":",inicio);
+        if(p<0) p=raw.indexOf("|"+n+":",inicio);
+        if(p>=0 && p<fin) fin=p;
+      });
+      var bloque=raw.substring(inicio,fin).replace(/^\s+|\s+$/g,"");
+      return bloque.split(",").map(function(v){return v.trim()}).filter(Boolean);
+    }
+    function verboLimpio(v){
+      return (v||"").replace(/\s*\([^)]*\)\s*/g," ").replace(/\s+/g," ").trim();
+    }
+    function lowerFirst(s){
+      s=(s||"").trim();
+      return s ? s.charAt(0).toLowerCase()+s.slice(1) : "";
+    }
+    function sinPunto(s){return (s||"").trim().replace(/[.;,\s]+$/,"")}
+    function sistemaMarzano(nivel){
+      if(nivel==="Recuperación" || nivel==="Comprensión" || nivel==="Análisis" || nivel==="Utilización del conocimiento") return "Sistema cognitivo";
+      if(nivel==="Metacognición") return "Sistema metacognitivo";
+      if(nivel==="Autosistema") return "Sistema del yo";
+      return "";
+    }
+    function render(){
+      var row=filaActual(); if(!row) return;
+      sistema.textContent=sistemaMarzano(marzano.value);
+      var v=lowerFirst(verboLimpio(verbo.value));
+      var s=sinPunto(sobre.value), c=sinPunto(como.value), p=sinPunto(para.value);
+      var txt="Que los(as) estudiantes de "+ciclo.value+" de "+modalidad.value+" · "+linea.value+" logren ";
+      txt += v || "[selecciona un verbo]";
+      if(s) txt+=" "+s;
+      if(c) txt+=", mediante "+c;
+      if(p) txt+=", para "+p;
+      txt+=".";
+      resultado.textContent=txt;
+      solo.textContent=row.solo||"";
+      prog.innerHTML="<strong>Nivel de progresión:</strong> "+(row.progresion||"");
+    }
+    function cargarFila(resetTexto){
+      var row=filaActual(); if(!row) return;
+      fill(marzano,row.niveles,marzano.value);
+      cargarVerbos();
+      if(resetTexto!==false){
+        sobre.value=row.sobre||"";
+        como.value=row.como||"";
+        para.value=row.para||"";
+      }
+      render();
+    }
+    function cargarVerbos(){
+      var row=filaActual(); if(!row) return;
+      var vs=parseVerbos(row,marzano.value);
+      fill(verbo,vs,verbo.value);
+      render();
+    }
+    function cargarCiclos(){
+      var prev=ciclo.value;
+      fill(ciclo,uniq(filasLinea().map(function(r){return r.ciclo})),prev);
+      cargarFila(true);
+    }
+    function cargarLineas(){
+      var prev=linea.value;
+      fill(linea,uniq(filasModalidad().map(function(r){return r.linea})),prev);
+      cargarCiclos();
+    }
+    function cargarModalidades(){
+      fill(modalidad,uniq(DATA.map(function(r){return r.modalidad})),modalidad.value);
+      cargarLineas();
+    }
+    function msg(t){
+      estado.textContent=t;estado.classList.add("on");
+      window.setTimeout(function(){estado.classList.remove("on")},3500);
+    }
+
+    modalidad.addEventListener("change",cargarLineas);
+    linea.addEventListener("change",cargarCiclos);
+    ciclo.addEventListener("change",function(){cargarFila(true)});
+    marzano.addEventListener("change",cargarVerbos);
+    verbo.addEventListener("change",render);
+    sobre.addEventListener("input",render);
+    como.addEventListener("input",render);
+    para.addEventListener("input",render);
+
+    document.getElementById("pfmGuardar").addEventListener("click",function(){
+      var d={modalidad:modalidad.value,linea:linea.value,ciclo:ciclo.value,marzano:marzano.value,
+        verbo:verbo.value,sobre:sobre.value,como:como.value,para:para.value};
+      try{localStorage.setItem(CLAVE,JSON.stringify(d));msg("✓ Tu borrador quedó guardado en este navegador.")}
+      catch(e){msg("No fue posible guardar el borrador en este navegador.")}
+    });
+
+    document.getElementById("pfmRecuperar").addEventListener("click",function(){
+      try{
+        var raw=localStorage.getItem(CLAVE);
+        if(!raw){msg("Aún no hay un borrador guardado.");return}
+        var d=JSON.parse(raw);
+        modalidad.value=d.modalidad;cargarLineas();
+        linea.value=d.linea;cargarCiclos();
+        ciclo.value=d.ciclo;cargarFila(true);
+        marzano.value=d.marzano;cargarVerbos();
+        verbo.value=d.verbo;
+        sobre.value=d.sobre||"";como.value=d.como||"";para.value=d.para||"";
+        render();msg("✓ Recuperamos tu último propósito formativo.");
+      }catch(e){msg("No fue posible recuperar el borrador.")}
+    });
+
+    document.getElementById("pfmImprimir").addEventListener("click",function(){window.print()});
+
+    document.getElementById("pfmLimpiar").addEventListener("click",function(){
+      if(!window.confirm("¿Quieres reiniciar esta plantilla?")) return;
+      try{localStorage.removeItem(CLAVE)}catch(e){}
+      cargarModalidades();
+      msg("La plantilla quedó lista para comenzar de nuevo.");
+    });
+
+    cargarModalidades();
+    })();
+    </script>
+    </div>
+
+</body>
+</html>
